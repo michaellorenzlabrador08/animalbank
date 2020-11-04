@@ -33,6 +33,7 @@ public class AnimalController {
 
     @GetMapping("/hello")
     public String getHello() {
+        System.out.println("some changes");
         return "hello people!";
     }
 
