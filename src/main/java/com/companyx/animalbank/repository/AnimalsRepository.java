@@ -8,7 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AnimalsRepository extends CrudRepository<Animal, Long> {
 
-    @Query("SELECT a from Animal a WHERE a.name LIKE %:animalName%")
-    Animal findByName(String animalName);
 
 }

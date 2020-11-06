@@ -17,20 +17,24 @@ public class AnimalServiceImpl implements AnimalService {
     @Autowired
     AnimalsRepository animalsRepository;
 
+    public AnimalServiceImpl() {
+
+    }
+
     @Override
-    public Response<Animal> createAnimal(AnimalDto dto) {
-        Response<Animal> resp = new Response<>();
+    public Animal createAnimal(AnimalDto dto) throws InputIsEmpty {
+
         try {
             if (StringUtils.isBlank(dto.getName())) {
                 throw new InputIsEmpty("Name cannot be null");
             }
-            Animal newAnimal = new Animal(dto.getName(), dto.getColor(), dto.getAddress(),0,10.5);
+            Animal newAnimal = new Animal(dto.getName(), dto.getColor(), dto.getAddress(), dto.getAge(), dto.getWeight());
             animalsRepository.save(newAnimal);
-            resp.success(animalsRepository.findByName(newAnimal.getName()));
+            return animalsRepository.findById(newAnimal.getId()).orElse(null);
+            //resp.success(animalsRepository.findByName(newAnimal.getName()));
         } catch (Exception ie) {
-            resp.failed(ie.getMessage());
+            throw ie;
         }
-        return resp;
     }
 
     @Override
@@ -43,5 +47,10 @@ public class AnimalServiceImpl implements AnimalService {
             resp.failed(e.getMessage());
         }
         return resp;
+    }
+
+    @Override
+    public String getHello() {
+        return "michael";
     }
 }
