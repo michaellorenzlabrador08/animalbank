@@ -4,13 +4,12 @@ import com.companyx.animalbank.dto.AnimalDto;
 import com.companyx.animalbank.entity.Animal;
 import com.companyx.animalbank.exception.InputIsEmpty;
 import com.companyx.animalbank.repository.AnimalsRepository;
-import com.companyx.animalbank.util.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
@@ -18,17 +17,15 @@ public class AnimalServiceImpl implements AnimalService {
     @Autowired
     AnimalsRepository animalsRepository;
 
-
     @Override
+    @Transactional
     public Animal create(AnimalDto dto) throws InputIsEmpty {
-
         if (StringUtils.isBlank(dto.getName())) {
             throw new InputIsEmpty("Name cannot be null");
         }
-        Animal newAnimal = new Animal(dto.getName(), dto.getColor(), dto.getAddress(), dto.getAge(), dto.getWeight());
-        animalsRepository.save(newAnimal);
+        Animal animal = new Animal(dto.getName(), dto.getColor(), dto.getAddress(), dto.getAge(), dto.getWeight());
+        Animal newAnimal = animalsRepository.save(animal);
         return animalsRepository.findById(newAnimal.getId()).orElse(null);
-
     }
 
 
