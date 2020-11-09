@@ -36,4 +36,13 @@ public class Animal extends BaseEntity {
         this.age = age;
         this.weight = weight;
     }
+
+    public Animal(Long id, String name, String color, String address, Integer age, Double weight) {
+        super.setId(id);
+        this.name = name;
+        this.color = color;
+        this.address = address;
+        this.age = age;
+        this.weight = weight;
+    }
 }

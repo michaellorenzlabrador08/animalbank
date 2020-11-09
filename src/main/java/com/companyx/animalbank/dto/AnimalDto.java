@@ -13,8 +13,6 @@ import java.io.Serializable;
 public class AnimalDto implements Serializable {
 
 
-    private Long id;
-
     @NotNull
     private String name;
 

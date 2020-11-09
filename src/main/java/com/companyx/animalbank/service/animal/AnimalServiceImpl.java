@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
@@ -17,40 +18,49 @@ public class AnimalServiceImpl implements AnimalService {
     @Autowired
     AnimalsRepository animalsRepository;
 
-    public AnimalServiceImpl() {
-
-    }
 
     @Override
-    public Animal createAnimal(AnimalDto dto) throws InputIsEmpty {
+    public Animal create(AnimalDto dto) throws InputIsEmpty {
 
-        try {
-            if (StringUtils.isBlank(dto.getName())) {
-                throw new InputIsEmpty("Name cannot be null");
-            }
-            Animal newAnimal = new Animal(dto.getName(), dto.getColor(), dto.getAddress(), dto.getAge(), dto.getWeight());
-            animalsRepository.save(newAnimal);
-            return animalsRepository.findById(newAnimal.getId()).orElse(null);
-            //resp.success(animalsRepository.findByName(newAnimal.getName()));
-        } catch (Exception ie) {
-            throw ie;
+        if (StringUtils.isBlank(dto.getName())) {
+            throw new InputIsEmpty("Name cannot be null");
         }
+        Animal newAnimal = new Animal(dto.getName(), dto.getColor(), dto.getAddress(), dto.getAge(), dto.getWeight());
+        animalsRepository.save(newAnimal);
+        return animalsRepository.findById(newAnimal.getId()).orElse(null);
+
     }
 
+
     @Override
-    public Response<List<Animal>> getAllAnimals() {
-        Response<List<Animal>> resp = new Response<>();
-        try {
-            List<Animal> all = (List<Animal>) animalsRepository.findAll();
-            resp.success(all);
-        } catch (Exception e) {
-            resp.failed(e.getMessage());
+    public List<Animal> list() {
+        return (List<Animal>) animalsRepository.findAll();
+    }
+
+
+    @Override
+    public Animal update(Animal newAnimal, Long id) {
+
+        Animal animal = animalsRepository.findById(id).orElse(null);
+        if (animal != null) {
+            animal.setName(newAnimal.getName());
+            animal.setAddress(newAnimal.getColor());
+            animal.setAge(newAnimal.getAge());
+            animal.setColor(newAnimal.getColor());
+            animal.setWeight(newAnimal.getWeight());
+            return animalsRepository.save(animal);
         }
-        return resp;
+        return null;
     }
 
     @Override
-    public String getHello() {
-        return "michael";
+    public boolean delete(Long id) {
+        Animal toDelete = animalsRepository.findById(id).orElse(null);
+        if (toDelete != null) {
+            animalsRepository.delete(toDelete);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
