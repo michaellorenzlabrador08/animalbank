@@ -1,6 +1,5 @@
 package com.companyx.animalbank.util;
 
-import liquibase.pro.packaged.T;
 import lombok.Getter;
 import lombok.Setter;
 

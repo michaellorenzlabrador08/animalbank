@@ -64,10 +64,10 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.liquibase</groupId>-->
+            <!--<artifactId>liquibase-core</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-core</artifactId>
@@ -152,17 +152,17 @@
 
 
     </dependencies>
-    <plugins>
-        <plugin>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-maven-plugin</artifactId>
-            <version>3.4.1</version>
-            <configuration>
-                <propertyFile>src/main/resources/application.properties</propertyFile>
-                <propertyFileWithhOverride>true</propertyFileWithhOverride>
-            </configuration>
-        </plugin>
-    </plugins>
+    <!--<plugins>-->
+        <!--<plugin>-->
+            <!--<groupId>org.liquibase</groupId>-->
+            <!--<artifactId>liquibase-maven-plugin</artifactId>-->
+            <!--<version>3.4.1</version>-->
+            <!--<configuration>-->
+                <!--<propertyFile>src/main/resources/application.properties</propertyFile>-->
+                <!--<propertyFileWithhOverride>true</propertyFileWithhOverride>-->
+            <!--</configuration>-->
+        <!--</plugin>-->
+    <!--</plugins>-->
 
     <build>
         <plugins>

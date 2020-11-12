@@ -36,10 +36,13 @@ public class AnimalServiceImpl implements AnimalService {
 
 
     @Override
-    public Animal update(Animal newAnimal, Long id) {
+    public Animal update(Animal newAnimal, Long id) throws InputIsEmpty {
 
         Animal animal = animalsRepository.findById(id).orElse(null);
         if (animal != null) {
+            if (StringUtils.isBlank(newAnimal.getName())) {
+                throw new InputIsEmpty("Animal name is null");
+            }
             animal.setName(newAnimal.getName());
             animal.setAddress(newAnimal.getColor());
             animal.setAge(newAnimal.getAge());
@@ -52,6 +55,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public boolean delete(Long id) {
+
         Animal toDelete = animalsRepository.findById(id).orElse(null);
         if (toDelete != null) {
             animalsRepository.delete(toDelete);

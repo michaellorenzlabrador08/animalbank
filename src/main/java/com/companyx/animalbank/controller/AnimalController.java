@@ -29,7 +29,7 @@ public class AnimalController {
     }
 
     @PutMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Animal update(@RequestBody Animal newAnimal, @PathVariable Long id) {
+    public Animal update(@RequestBody Animal newAnimal, @PathVariable Long id) throws InputIsEmpty {
         return animalService.update(newAnimal, id);
     }
 
@@ -38,5 +38,10 @@ public class AnimalController {
         return animalService.delete(id);
     }
 
+
+    @GetMapping(value = "/hello")
+    public String hello() {
+        return "hello";
+    }
 
 }

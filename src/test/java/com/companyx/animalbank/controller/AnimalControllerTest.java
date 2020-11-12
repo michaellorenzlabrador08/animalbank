@@ -2,47 +2,82 @@ package com.companyx.animalbank.controller;
 
 import com.companyx.animalbank.dto.AnimalDto;
 import com.companyx.animalbank.entity.Animal;
-import com.companyx.animalbank.service.animal.AnimalServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
+@RunWith(SpringRunner.class)
 public class AnimalControllerTest {
 
     private MockMvc mockMvc;
 
-    @Mock
-    private AnimalServiceImpl animalService;
+    @Autowired
+    private WebApplicationContext wac;
 
-    @InjectMocks
-    private AnimalController animalController;
-
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Before
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(animalController).build();
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
+
+
+    @Test
+    public void test_create() throws Exception {
+        AnimalDto dto = new AnimalDto("michael", "blue", "marymount", 2, 5.9);
+        Animal newAnimal = new Animal((long) 1, "michael", "blue", "marymount", 2, 5.9);
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/animal/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk()).andReturn();
+
+        String actualJsonResponse = mvcResult.getResponse().getContentAsString();
+        String expectedJsonResponse = objectMapper.writeValueAsString(newAnimal);
+        assertEquals(expectedJsonResponse, actualJsonResponse);
+
+    }
+
+    @Test
+    public void test_list() throws Exception {
+        mockMvc.perform(get("/api/animal/list")
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void test_update() throws Exception {
+
+        Animal newAnimal = new Animal((long) 1, "new-michael", "blue", "marymount", 2, 5.9);
+        mockMvc.perform(put("/api/animal/update/" + 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newAnimal)))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void test_delete() throws Exception {
+        mockMvc.perform(delete("/api/animal/delete/" + 1)
+        ).andExpect(status().isOk());
+    }
+
+    /*
 
     @Test
     public void testList() throws Exception {
@@ -77,19 +112,25 @@ public class AnimalControllerTest {
         Animal newAnimal = new Animal((long) 1, dto.getName(), dto.getColor(), dto.getAddress(), dto.getAge(), dto.getWeight());
         when(animalService.create(dto)).thenReturn(newAnimal);
 
-        //then
+        //Animal addedAnimal = animalController.create(dto);
         String request = mapper.writeValueAsString(dto);
-        MvcResult mvcResult = mockMvc.perform(post("/api/animal/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(request)
-        )
-                .andExpect(status().isOk()).andReturn();
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post("/api/animal/create")
+                .accept(MediaType.APPLICATION_JSON).content(request)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        //then
+        MvcResult mvcResult = mockMvc.perform(
+                requestBuilder)
+                .andReturn();
 
         String actualJsonResponse = mvcResult.getResponse().getContentAsString();
         String expectedJsonResponse = mapper.writeValueAsString(newAnimal);
 
+
         //verify
         assertEquals(expectedJsonResponse, actualJsonResponse);
+        //assertEquals(newAnimal, addedAnimal);
         verify(animalService).create(dto);
     }
 
@@ -136,5 +177,5 @@ public class AnimalControllerTest {
         assertTrue(response);
     }
 
-
+*/
 }

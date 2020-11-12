@@ -11,7 +11,7 @@ public interface AnimalService {
 
     List<Animal> list();
 
-    Animal update(Animal animal, Long id);
+    Animal update(Animal animal, Long id) throws InputIsEmpty;
 
     boolean delete(Long id);
 }
